@@ -1,4 +1,8 @@
 package com.elevenchu.wiki.req;
 
-public class DocQueryReq {
+public class DocQueryReq extends PageReq {
+    @Override
+    public String toString() {
+        return "DocQueryReq{} " + super.toString();
+    }
 }
