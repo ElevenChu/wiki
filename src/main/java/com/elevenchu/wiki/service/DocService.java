@@ -1,7 +1,9 @@
 package com.elevenchu.wiki.service;
 
+import com.elevenchu.wiki.domain.Content;
 import com.elevenchu.wiki.domain.Doc;
 import com.elevenchu.wiki.domain.DocExample;
+import com.elevenchu.wiki.mapper.ContentMapper;
 import com.elevenchu.wiki.mapper.DocMapper;
 import com.elevenchu.wiki.req.DocQueryReq;
 import com.elevenchu.wiki.req.DocSaveReq;
@@ -18,12 +20,16 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.elevenchu.wiki.util.SnowFlake;
 @Service
 public class DocService {
     private static final Logger LOG = LoggerFactory.getLogger(DocService.class);
     @Resource
     DocMapper docMapper;
+    @Resource
+    ContentMapper contentMapper;
+    @Resource
+    private SnowFlake snowFlake;
     public List<DocQueryResp> all(Long ebookId) {
         DocExample docExample = new DocExample();
         docExample.createCriteria().andEbookIdEqualTo(ebookId);
@@ -70,28 +76,28 @@ public class DocService {
     /**
      * 保存
      */
-//    @Transactional
-//    public void save(DocSaveReq req) {
-//        Doc doc = CopyUtil.copy(req, Doc.class);
-//        Content content = CopyUtil.copy(req, Content.class);
-//        if (ObjectUtils.isEmpty(req.getId())) {
-//            // 新增
-//            doc.setId(snowFlake.nextId());
-//            doc.setViewCount(0);
-//            doc.setVoteCount(0);
-//            docMapper.insert(doc);
-//
-//            content.setId(doc.getId());
-//            contentMapper.insert(content);
-//        } else {
-//            // 更新
-//            docMapper.updateByPrimaryKey(doc);
-//            int count = contentMapper.updateByPrimaryKeyWithBLOBs(content);
-//            if (count == 0) {
-//                contentMapper.insert(content);
-//            }
-//        }
-//    }
+    @Transactional
+    public void save(DocSaveReq req) {
+        Doc doc = CopyUtil.copy(req, Doc.class);
+        Content content = CopyUtil.copy(req, Content.class);
+        if (ObjectUtils.isEmpty(req.getId())) {
+            // 新增
+            doc.setId(snowFlake.nextId());
+            doc.setViewCount(0);
+            doc.setVoteCount(0);
+            docMapper.insert(doc);
+
+            content.setId(doc.getId());
+            contentMapper.insert(content);
+        } else {
+            // 更新
+            docMapper.updateByPrimaryKey(doc);
+            int count = contentMapper.updateByPrimaryKeyWithBLOBs(content);
+            if (count == 0) {
+                contentMapper.insert(content);
+            }
+        }
+    }
 
     public void delete(Long id) {
         docMapper.deleteByPrimaryKey(id);
