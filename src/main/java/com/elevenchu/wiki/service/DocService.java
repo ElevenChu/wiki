@@ -143,7 +143,7 @@ public class DocService {
 //        // 远程IP+doc.id作为key，24小时内不能重复
 //        String ip = RequestContext.getRemoteAddr();
 //        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + ip, 5000)) {
-//            docMapperCust.increaseVoteCount(id);
+//
 //        } else {
 //            throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
 //        }
@@ -155,5 +155,11 @@ public class DocService {
 //        // rocketMQTemplate.convertAndSend("VOTE_TOPIC", "【" + docDb.getName() + "】被点赞！");
 //    }
 
-
+    /**
+     * 更新电子书信息
+     * 将文档信息存入电子书
+     */
+    public void updateEbookInfo() {
+        docMapperCust.updateEbookInfo();
+    }
 }
