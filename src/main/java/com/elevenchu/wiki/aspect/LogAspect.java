@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Aspect
 @Component
-public class LogAspect {
+public class  LogAspect {
 
     private final static Logger LOG = LoggerFactory.getLogger(LogAspect.class);
 
