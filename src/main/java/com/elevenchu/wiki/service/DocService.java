@@ -5,6 +5,7 @@ import com.elevenchu.wiki.domain.Doc;
 import com.elevenchu.wiki.domain.DocExample;
 import com.elevenchu.wiki.mapper.ContentMapper;
 import com.elevenchu.wiki.mapper.DocMapper;
+import com.elevenchu.wiki.mapper.DocMapperCust;
 import com.elevenchu.wiki.req.DocQueryReq;
 import com.elevenchu.wiki.req.DocSaveReq;
 import com.elevenchu.wiki.resp.DocQueryResp;
@@ -28,6 +29,12 @@ public class DocService {
     DocMapper docMapper;
     @Resource
     ContentMapper contentMapper;
+    /**
+     * 阅读，文章阅读数+1接口
+     */
+    @Resource
+    private DocMapperCust docMapperCust;
+
     @Resource
     private SnowFlake snowFlake;
     public List<DocQueryResp> all(Long ebookId) {
@@ -116,5 +123,15 @@ public class DocService {
         docMapper.deleteByExample(docExample);
     }
 
+    public String findContent(Long id) {
+        Content content = contentMapper.selectByPrimaryKey(id);
+        // 文档阅读数+1
+        docMapperCust.viewCountIncrease(id);
+        if (ObjectUtils.isEmpty(content)) {
+            return "";
+        } else {
+            return content.getContent();
+        }
+    }
 
 }
