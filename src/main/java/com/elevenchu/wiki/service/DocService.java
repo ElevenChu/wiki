@@ -13,8 +13,12 @@ import com.elevenchu.wiki.req.DocSaveReq;
 import com.elevenchu.wiki.resp.DocQueryResp;
 import com.elevenchu.wiki.resp.PageResp;
 import com.elevenchu.wiki.util.CopyUtil;
+import com.elevenchu.wiki.util.RedisUtil;
+import com.elevenchu.wiki.util.RequestContext;
+import com.elevenchu.wiki.websocket.WebSocketServer;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -24,6 +28,8 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import com.elevenchu.wiki.util.SnowFlake;
+import org.springframework.web.context.annotation.RequestScope;
+
 @Service
 public class DocService {
     private static final Logger LOG = LoggerFactory.getLogger(DocService.class);
@@ -39,6 +45,13 @@ public class DocService {
 
     @Resource
     private SnowFlake snowFlake;
+    @Resource
+    private RedisUtil redisUtil;
+    @Resource
+    private WebSocketServer webSocketServer;
+    @Resource
+    private WsService wsService;
+
     public List<DocQueryResp> all(Long ebookId) {
         DocExample docExample = new DocExample();
         docExample.createCriteria().andEbookIdEqualTo(ebookId);
@@ -138,22 +151,22 @@ public class DocService {
     /**
      * 点赞
      */
-//    public void vote(Long id) {
-//        // docMapperCust.increaseVoteCount(id);
-//        // 远程IP+doc.id作为key，24小时内不能重复
-//        String ip = RequestContext.getRemoteAddr();
-//        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + ip, 5000)) {
-//
-//        } else {
-//            throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
-//        }
-//
-//        // 推送消息
-//        Doc docDb = docMapper.selectByPrimaryKey(id);
-//        String logId = MDC.get("LOG_ID");
-//        wsService.sendInfo("【" + docDb.getName() + "】被点赞！", logId);
-//        // rocketMQTemplate.convertAndSend("VOTE_TOPIC", "【" + docDb.getName() + "】被点赞！");
-//    }
+    public void vote(Long id) {
+        // docMapperCust.increaseVoteCount(id);
+        // 远程IP+doc.id作为key，24小时内不能重复
+        String ip = RequestContext.getRemoteAddr();
+        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + ip, 5000)) {
+
+        } else {
+            throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
+        }
+
+        // 推送消息
+        Doc docDb = docMapper.selectByPrimaryKey(id);
+        String logId = MDC.get("LOG_ID");
+        wsService.sendInfo("【" + docDb.getName() + "】被点赞！", logId);
+        // rocketMQTemplate.convertAndSend("VOTE_TOPIC", "【" + docDb.getName() + "】被点赞！");
+    }
 
     /**
      * 更新电子书信息
