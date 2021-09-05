@@ -1,5 +1,6 @@
 package com.elevenchu.wiki.config;
 
+import com.elevenchu.wiki.interceptor.ActionInterceptor;
 import com.elevenchu.wiki.interceptor.LoginInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -20,8 +21,8 @@ public class SpringMvcConfig implements WebMvcConfigurer {
    @Resource
    LoginInterceptor loginInterceptor;
 
-    // @Resource
-    // ActionInterceptor actionInterceptor;
+     @Resource
+     ActionInterceptor actionInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

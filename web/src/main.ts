@@ -6,7 +6,6 @@ import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import * as Icons from '@ant-design/icons-vue';
 import axios from 'axios';
-// @ts-ignore
 import {Tool} from "@/util/tool";
 import { message } from 'ant-design-vue';
 
