@@ -18,7 +18,7 @@ import com.elevenchu.wiki.util.RequestContext;
 import com.elevenchu.wiki.websocket.WebSocketServer;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
+//import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,8 +52,8 @@ public class DocService {
     private WebSocketServer webSocketServer;
     @Resource
     private WsService wsService;
-     @Resource
-     private RocketMQTemplate rocketMQTemplate;
+//     @Resource
+//     private RocketMQTemplate rocketMQTemplate;
 
     public List<DocQueryResp> all(Long ebookId) {
         DocExample docExample = new DocExample();
