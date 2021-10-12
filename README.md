@@ -1,6 +1,7 @@
 # wiki
 前后端分离的SpringBoot+Vue WIKI知识库系统
 
+
 Springboot+Vue+Mysql+Redis+rocketMQ+Mybatis
 
 本项目主要包含模块：
